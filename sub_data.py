@@ -1,4 +1,5 @@
 from cortex import Cortex
+from threading import Thread
 
 class Subcribe():
     """
@@ -234,7 +235,10 @@ def main():
 
     # list data streams
     streams = ['met']
-    s.start(streams)
+
+    # start thread for EEG
+    t = Thread(target=s.start(streams))
+    t.start()
 
 if __name__ =='__main__':
     main()
