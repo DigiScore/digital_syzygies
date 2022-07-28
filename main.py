@@ -3,7 +3,7 @@ import sub_data as eeg
 from audio_composer import AudioComposer
 from time import time
 from config import *
-import trio
+# import trio
 
 def conductor():
     # start the composition timer here
@@ -24,7 +24,12 @@ def main():
 
     # 3. starting audio composer
     print("starting audio composer")
-    audio_comp = AudioComposer()
+    engagement_audio = AudioComposer('engagement')
+    excitement_audio = AudioComposer('excitement')
+    focus_audio = AudioComposer('focus')
+    interest_audio = AudioComposer('interest')
+    relaxation_audio = AudioComposer('relaxation')
+    stress_audio = AudioComposer('stress')
 
     # 4. start the composition
     print("Off we go //////////")

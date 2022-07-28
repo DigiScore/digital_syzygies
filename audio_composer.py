@@ -3,7 +3,7 @@ from pydub.playback import play
 import random
 
 class AudioComposer:
-    def __init__(self):
+    def __init__(self, audio_folder):
         # define class params 4 audio composer
         self.list_all_audio = glob.glob('data/audio/*.wav')
         self.num = len(self.list_all_audio)
