@@ -1,39 +1,90 @@
-import config
-import sub_data as eeg
-from audio_composer import AudioComposer
+######################################
+#
+# Digital Syzygies
+#
+# code by Craig Vear & William Vear
+#
+# August 2022
+#
+# for a composition by Andrew Hugill
+#
+######################################
+
+# import python libraries
 from time import time
-from config import *
-# import trio
+import sys
+import platform
+import threading
 
-def conductor():
-    # start the composition timer here
-    start_time = time()
+# import QT libraries
+from PyQt5.Qt import Qt
+from PyQt5.QtCore import pyqtSlot as Slot
+from PyQt5.QtGui import QPainter, QPen, QColor, QImage, QFont
+from PyQt5.QtWidgets import (QApplication, QWidget)
 
-    # while the composition duration is less that the duration
-    while time() < start_time + config.duration_of_composition:
-        pass
+# import project libraries
+import config
+import eeg
+from eeg import Eeg
+
+PLATFORM = platform.machine()
 
 
-def main():
-    # 1. connect to EEG reader as a thread
-    print("connecting to EEG headset")
-    eeg.main()
+class MyWidget(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
 
-    # 2. start cello notation as a thread
-    print("initiating cello score")
+        eeg_bot = Eeg()
 
-    # 3. starting audio composer
-    print("starting audio composer")
-    engagement_audio = AudioComposer('engagement')
-    excitement_audio = AudioComposer('excitement')
-    focus_audio = AudioComposer('focus')
-    interest_audio = AudioComposer('interest')
-    relaxation_audio = AudioComposer('relaxation')
-    stress_audio = AudioComposer('stress')
+        # start the composition timer here
+        start_time = time()
 
-    # 4. start the composition
-    print("Off we go //////////")
+        # start QT painting
+        self.painter = QPainter(self)
+        self.painter.setRenderHint(QPainter.Antialiasing, True)
+
+        # while the composition duration is less that the duration
+        while time() < start_time + config.duration_of_composition:
+            self.update_gui()
+
+    def update_gui(self):
+        """Threading event that updates the UI"""
+        # print("-------- updating gui")
+
+        # every 10 seconds read a new signal from eeg
+        # and do audio thing
+        if int(time() % 10) == 0:
+            eeg.read()
+
+        # start the thread
+        # self.gui_thread = None
+        self.update_visuals()
+        self.update()
+        self.gui_thread = threading.Timer(1, self.update_gui)
+        self.gui_thread.start()
+
+    def update_visuals(self):
+        screen_resolution = self.geometry()
+        height = screen_resolution.height()
+        width = screen_resolution.width()
+
+        self.painter.drawImage(0, 0, config.image_to_display)
+
 
 
 if __name__ =='__main__':
-    main()
+    if __name__ == "__main__":
+        app = QApplication(sys.argv)
+
+        widget = MyWidget()
+        widget.resize(800, 600)
+        # widget.showFullScreen()
+        widget.setWindowTitle("Digital Syzygies")
+        widget.setStyleSheet("background-color:white;")
+
+        if PLATFORM == "x86_64":
+            widget.setCursor(Qt.BlankCursor)
+
+        widget.show()
+
+        sys.exit(app.exec_())
