@@ -2,10 +2,12 @@
 Network, EEG composition by Andrew Hugill and team
 
 Step 1 - created Python virtual environment (venv)
+
 Digital Syzygies requires a minimum [Python version of 3.7](https://www.python.org/downloads/). 
 If you don't have it you'll need to first install it, then [set up a virtual environment](https://realpython.com/python-virtual-environments-a-primer/) with it. 
 
 Step 2 - download Digital Syzygies and dependent libraries
+
 Inside your venv download the Digital Syzygies code:
 
 ```
