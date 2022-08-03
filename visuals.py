@@ -15,11 +15,17 @@ random.shuffle(visual_folder)
 
 def update_vis():
     while running:
+        # randum dur for image to be on screen
         rnd_dur = random.randrange(config.min_dur_cello_notation,
                                    config.max_dur_cello_notation)
 
-        config.image_to_display =
+        # random file from visual folder
+        rnd_image = random.randrange(image_count)
 
+        # add to the config file
+        config.image_to_display = visual_folder[rnd_image]
+
+        # wait out the dur of image on screen
         sleep(rnd_dur)
 
 def terminate():

@@ -24,17 +24,17 @@ from PyQt5.QtWidgets import (QApplication, QWidget)
 
 # import project libraries
 import config
-import eeg
 from eeg import Eeg
 
+# which platform is this machine?
 PLATFORM = platform.machine()
-
 
 class MyWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
 
-        eeg_bot = Eeg()
+        # start the eeg reader
+        self.eeg_bot = Eeg()
 
         # start the composition timer here
         start_time = time()
@@ -54,22 +54,27 @@ class MyWidget(QWidget):
         # every 10 seconds read a new signal from eeg
         # and do audio thing
         if int(time() % 10) == 0:
-            eeg.read()
+            self.eeg_bot.read_data()
 
-        # start the thread
-        # self.gui_thread = None
+        # get the most recent visual file choice from config
         self.update_visuals()
+
+        # start the thread for the UI
         self.update()
-        self.gui_thread = threading.Timer(1, self.update_gui)
+
+        # start the UI thread
+        ui_thread_baud_rate = 1 # in seconds
+        self.gui_thread = threading.Timer(ui_thread_baud_rate, self.update_gui)
         self.gui_thread.start()
 
     def update_visuals(self):
+        # might not need this geometry
         screen_resolution = self.geometry()
         height = screen_resolution.height()
         width = screen_resolution.width()
 
+        # put the cello score image on the UI
         self.painter.drawImage(0, 0, config.image_to_display)
-
 
 
 if __name__ =='__main__':

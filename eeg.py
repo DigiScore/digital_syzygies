@@ -1,4 +1,4 @@
-from modules_new import sub_data
+from modules import sub_data
 from audio import AudioComposer
 
 class Eeg:
@@ -9,11 +9,11 @@ class Eeg:
 
         # starting audio composer
         print("starting audio composer")
-        engagement_audio = AudioComposer('engagement')
+        engagement_audio = AudioComposer()
 
     # reads the current metrics and stores in dictionary
     # then does the comparison and calls the audio
-    def read(self):
+    def read_data(self):
         # todo - gets dict from         For example: {'met': [True, 0.5, True, 0.5, 0.0, True, 0.5, True, 0.5, True, 0.5, True, 0.5], 'time': 1627459390.4229}
         pm_dict = sub_data.on_new_pow_data()
         # todo parse positin of highest pm_dict into
