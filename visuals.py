@@ -12,6 +12,8 @@ image_count = len(visual_folder)
 seed_rnd = random.randrange(image_count)
 random.seed(seed_rnd)
 random.shuffle(visual_folder)
+print(f"{image_count} images in visual folder")
+config.image_to_display = visual_folder[0]
 
 def update_vis():
     while running:
@@ -32,7 +34,8 @@ def terminate():
     global running
     running = False
 
-vis_thread = threading.Timer(1, update_vis)
-vis_thread.start()
+def main():
+    vis_thread = threading.Timer(1, update_vis)
+    vis_thread.start()
 
 

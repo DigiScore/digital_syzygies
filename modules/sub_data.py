@@ -1,5 +1,6 @@
-from cortex import Cortex
+from modules.cortex import Cortex
 from threading import Thread
+import config
 
 class Subcribe():
     """
@@ -185,8 +186,18 @@ class Subcribe():
              The values in the array met match the labels in the array labels return at on_new_data_labels
         For example: {'met': [True, 0.5, True, 0.5, 0.0, True, 0.5, True, 0.5, True, 0.5, True, 0.5], 'time': 1627459390.4229}
         """
+        fields_req_from_met = [1, 3, 6, 8, 10, 12]
+        eeg_pm_list = []
+
         data = kwargs.get('data')
         print('pm data: {}'.format(data))
+        parse_data = data['met']
+
+        for field in fields_req_from_met:
+            eeg_pm_list.append(parse_data[field])
+
+        config._eeg_data = eeg_pm_list
+        print(f'config data = {config._eeg_data}')
 
     def on_new_pow_data(self, *args, **kwargs):
         """
@@ -228,8 +239,8 @@ class Subcribe():
 def main():
 
     # Please fill your application clientId and clientSecret before running script
-    your_app_client_id = 'RUQh0lDR7AyecvvnsnlLaFimA8s7A2Vci1Uyd96X'
-    your_app_client_secret = 'XS4I78088I9EFF4ToFlZIPl1uYctlYFBdJaL7e3cEDQSKdqjWFzZ0krVfLnUHpAPjvXtj4uk48kxTNcl4nUpMCorLjur90J26gYnsIHwAjitXqpcJe43xypWyaIOLOo5'
+    your_app_client_id = 'B2jzrxVyqPX71AdYLyKn7Ob3SDyTtV15HZRlpxWQ'
+    your_app_client_secret = 'yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j'
 
     s = Subcribe(your_app_client_id, your_app_client_secret)
 

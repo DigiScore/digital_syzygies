@@ -24,6 +24,8 @@ class AudioComposer:
         relaxation = audio_player("relaxation")
         stress = audio_player("stress")
 
+        self.play_queue = []
+
         # set the threads going for the 6 audio players
         tasks = [engagement.play(),
                  excitement.play(),
@@ -38,9 +40,11 @@ class AudioComposer:
 
     # receives a signal from main to check & start an audio file
     def play(self, player_key):
-        if self.check_num_of_players():
-            if self.check_dict_of_players(player_key):
-                self.audio_player_bang(player_key)
+        if len(self.play_queue) > 0:
+            if self.check_num_of_players():
+                player_key = self.play_queue.pop()
+                if self.check_dict_of_players(player_key):
+                    self.audio_player_bang(player_key)
 
     # check to see if pm player is already playing
     def check_dict_of_players(self, player_key):
