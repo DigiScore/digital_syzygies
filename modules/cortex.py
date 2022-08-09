@@ -382,7 +382,7 @@ class Cortex(Dispatcher):
         else:
             raise KeyError
 
-    def query_headset(self):
+    def query_headset(self, ws):
         print('query headset --------------------------------')
         query_headset_request = {
             "jsonrpc": "2.0",
@@ -393,7 +393,7 @@ class Cortex(Dispatcher):
         if self.debug:
             print('queryHeadsets request \n', json.dumps(query_headset_request, indent=4))
 
-        self.ws.send(json.dumps(query_headset_request, indent=4))
+        ws.send(json.dumps(query_headset_request, indent=4))
 
     def connect_headset(self, headset_id):
         print('connect headset --------------------------------')
@@ -438,7 +438,7 @@ class Cortex(Dispatcher):
         }
         self.ws.send(json.dumps(has_access_request, indent=4))
 
-    def authorize(self):
+    def authorize(self, ws):
         print('authorize --------------------------------')
         authorize_request = {
             "jsonrpc": "2.0",
@@ -455,9 +455,9 @@ class Cortex(Dispatcher):
         if self.debug:
             print('auth request \n', json.dumps(authorize_request, indent=4))
 
-        self.ws.send(json.dumps(authorize_request))
+        ws.send(json.dumps(authorize_request))
 
-    def create_session(self):
+    def create_session(self, ws, token, headset_id):
         if self.session_id != '':
             warnings.warn("There is existed session " + self.session_id)
             return
@@ -468,8 +468,8 @@ class Cortex(Dispatcher):
             "id": CREATE_SESSION_ID,
             "method": "createSession",
             "params": {
-                "cortexToken": self.auth,
-                "headset": self.headset_id,
+                "cortexToken": token,
+                "headset": headset_id,
                 "status": "active"
             }
         }
@@ -477,7 +477,7 @@ class Cortex(Dispatcher):
         if self.debug:
             print('create session request \n', json.dumps(create_session_request, indent=4))
 
-        self.ws.send(json.dumps(create_session_request))
+        ws.send(json.dumps(create_session_request))
 
     def close_session(self):
         print('close session --------------------------------')
@@ -535,14 +535,14 @@ class Cortex(Dispatcher):
 
         self.ws.send(json.dumps(disconnect_headset_request))
 
-    def sub_request(self, stream):
+    def sub_request(self, stream, ws, token, session_id):
         print('subscribe request --------------------------------')
         sub_request_json = {
             "jsonrpc": "2.0",
             "method": "subscribe",
             "params": {
-                "cortexToken": self.auth,
-                "session": self.session_id,
+                "cortexToken": token,
+                "session": session_id,
                 "streams": stream
             },
             "id": SUB_REQUEST_ID
@@ -550,7 +550,7 @@ class Cortex(Dispatcher):
         if self.debug:
             print('subscribe request \n', json.dumps(sub_request_json, indent=4))
 
-        self.ws.send(json.dumps(sub_request_json))
+        ws.send(json.dumps(sub_request_json))
 
     def unsub_request(self, stream):
         print('unsubscribe request --------------------------------')

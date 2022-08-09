@@ -15,6 +15,7 @@ max_dur_cello_notation = 32
 # duration of composition (in seconds)
 duration_of_composition = 360
 
+full_screen = False
 
 ###### non-user variables ####
 
@@ -29,7 +30,6 @@ _dict_of_playing = {"engagement": False,
                     "relaxation": False,
                     "stress": False
                     }
-_eeg_data = {}
 
 ##### Emotiv access and app codes
 # client secret = yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j

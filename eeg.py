@@ -1,12 +1,18 @@
-from modules import sub_data
+from modules.cortex import Cortex
 from audio import AudioComposer
-import config
 from threading import Thread
-from modules.sub_data import Subcribe
-from concurrent.futures import ThreadPoolExecutor
+import ssl
+import websocket  # 'pip install websocket-client' for install
+import json
+
 
 class Eeg:
     def __init__(self):
+        # init values
+        url = "wss://localhost:6868"
+        sslopt = {"cert_reqs": ssl.CERT_NONE}
+        self.fields_req_from_met = [1, 3, 6, 8, 10, 12]
+
         # connect to EEG reader as a thread
         print("connecting to EEG headset")
 
@@ -14,45 +20,72 @@ class Eeg:
         your_app_client_id = 'B2jzrxVyqPX71AdYLyKn7Ob3SDyTtV15HZRlpxWQ'
         your_app_client_secret = 'yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j'
 
-        s = Subcribe(your_app_client_id, your_app_client_secret)
+        # s = Subscribe(your_app_client_id, your_app_client_secret)
+        self.c = Cortex(your_app_client_id, your_app_client_secret, debug_mode=True)
 
-        # list data streams
-        streams = ['met']
-        #
-        # eeg_loop = asyncio.get_event_loop()
-        # async_function = asyncio.wait([self.check_video_process_terminate()])
-        # eeg_loop.run_until_complete(async_function)
+        print("\n============================")
+        print("Connecting to websocket...")
+        self.ws = websocket.create_connection(url, sslopt=sslopt)
 
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            futures = {executor.submit(s.start(streams))}
+        # get authorisation
+        self.c.authorize(self.ws)
+        auth = self.ws.recv()
+        print(auth)
+        token = json.loads(auth)["result"]["cortexToken"]
 
+        print("Checking headset connectivity...")
+        # connect
+        self.c.query_headset(self.ws)
+        response = self.ws.recv()
+        print(response)
+        headset_id = json.loads(response)["result"][0]["id"]
 
-        # start thread for EEG
-        # t = Thread(target=s.start(streams))
-        print(' xxxxxxxxxxxxxxxxxx  x   x   x   x   x   x   x   x   got here1')
-        # t.start()
-        #
-        print(' xxxxxxxxxxxxxxxxxx  x   x   x   x   x   x   x   x   got here2')
-        # t.join()
+        print("Connecting to headset...")
 
-        print(' xxxxxxxxxxxxxxxxxx  x   x   x   x   x   x   x   x   got here3')
+        print("\nCreating session...")
+        self.c.create_session(self.ws, token, headset_id)
+        response = self.ws.recv()
+        print(response)
+        session_id = json.loads(response)["result"]["id"]
+
+        print("\nSubscribing to session...")
+        stream = ['met']
+        self.c.sub_request(stream, self.ws, token, session_id)
+        print(self.ws.recv())
 
         # starting audio composer
         print("starting audio composer")
-        self.audio_bot = AudioComposer()
+        self.audio = AudioComposer()
+
+        # start thread for EEG
+        self.running = True
+        # t = Timer(1, self.read_data)
+        t = Thread(target=self.read_data)
+        t.start()
 
     # reads the current metrics and stores in dictionary
     # then does the comparison and calls the audio
     def read_data(self):
         # gets dict from         For example: {'met': [True, 0.5, True, 0.5, 0.0, True, 0.5, True, 0.5, True, 0.5, True, 0.5], 'time': 1627459390.4229}
-        pm_dict = config._eeg_data
+        while self.running:
+            print('-------- updating eeg')
+            eeg_pm_list = []
 
-        # finds position of highest pm_dict into
-        highest_pm = self.calc_highest_pm(pm_dict)
+            data = json.loads(self.ws.recv())
+            data = data['met']
+            print('pm data: {}'.format(data))
 
-        # send the highest pm type position to audio player queue
-        # to make sound
-        self.audio_bot.play_queue.append((highest_pm))
+            # if data != self.eeg_pm_list:
+            for field in self.fields_req_from_met:
+                eeg_pm_list.append(data[field])
+
+            # finds position of highest pm_dict into
+            highest_pm = self.calc_highest_pm(eeg_pm_list)
+            print(f'highest field = {highest_pm}')
+
+            # send the highest pm type position to audio player queue
+            # to make sound
+            self.audio.play_queue.append(highest_pm)
 
     def calc_highest_pm(self, pm_dict):
         # calc highest value position of pm
@@ -66,7 +99,10 @@ class Eeg:
 
         return highest
 
-
+    def terminate(self):
+        self.running = False
+        self.audio.terminate()
 
 if __name__ == "__main__":
-    eeg = Eeg
+    eeg = Eeg()
+

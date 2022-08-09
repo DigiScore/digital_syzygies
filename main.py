@@ -14,14 +14,10 @@
 from time import time
 import sys
 import platform
-import threading
 
 # import QT libraries
 from PyQt5.Qt import Qt
-from PyQt5.QtGui import QPainter, QPen, QColor, QImage, QFont
-from PyQt5.QtWidgets import (QApplication, QWidget)
-from PyQt5.QtGui import QPixmap
-# from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 # import project libraries
@@ -44,15 +40,17 @@ class MainWindow(QtWidgets.QWidget):
         # start visual thread
         visuals.main()
 
-        # todo - start the eeg reader
-        # self.eeg_bot = Eeg()
+        # start the eeg reader andf audio bot
+        self.eeg_bot = Eeg()
 
+        # build the UI widget for visual score
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setStyleSheet("background-color:white;")
-        # self.showFullScreen()
+        if config.full_screen:
+            self.showFullScreen()
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.label = QtWidgets.QLabel(self)
         timer = QtCore.QTimer(self)
@@ -65,17 +63,10 @@ class MainWindow(QtWidgets.QWidget):
         self.start_time = time()
 
         # while the composition duration is less that the duration
-        # while time() < start_time + config.duration_of_composition:
-            # self.update_gui()
         self.update_image()
 
     def update_image(self):
-        print("-------- updating gui")
-
-        # todo - every 10 seconds read a new signal from eeg
-        # and do audio thing
-        # if int(time() % 10) == 0:
-        #     self.eeg_bot.read_data()
+        # print("-------- updating gui")
 
         # load image from config and display on widget
         pixmap = QtGui.QPixmap(config.image_to_display)
@@ -85,55 +76,19 @@ class MainWindow(QtWidgets.QWidget):
             self.resize(pixmap.size())
 
         if time() > self.start_time + config.duration_of_composition:
-            quit()
+            self.terminate()
 
-    # def update_gui(self):
-    #     """Threading event that updates the UI"""
-    #     # print("-------- updating gui")
-    #
-    #     # every 10 seconds read a new signal from eeg
-    #     # and do audio thing
-    #     # if int(time() % 10) == 0:
-    #     #     self.eeg_bot.read_data()
-    #
-    #     # get the most recent visual file choice from config
-    #     self.update_visuals()
-    #
-    #     # start the thread for the UI
-    #     self.update()
-    #
-    #     # start the UI thread
-    #     ui_thread_baud_rate = 1 # in seconds
-    #     self.gui_thread = threading.Timer(ui_thread_baud_rate, self.update_gui)
-    #     self.gui_thread.start()
-
-    # def update_visuals(self):
-        # # might not need this geometry
-        # screen_resolution = self.geometry()
-        # height = screen_resolution.height()
-        # width = screen_resolution.width()
-        #
-        # # put the cello score image on the UI
-        # # self.painter.drawImage(0, 0, config._image_to_display)
-        #
-        # image_to_show = QImage
-        # painter = QPainter(config._image_to_display)
-
-        # label = QLabel(self)
-        # pixmap = QPixmap(config.image_to_display)
-        # label.setPixmap(pixmap)
-        # self.setCentralWidget(label)
-        # self.resize(pixmap.width(), pixmap.height())
+    def terminate(self):
+        # terminate all streams - audio may play out.
+        self.eeg_bot.terminate()
+        visuals.terminate()
+        quit()
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     widget = MainWindow()
-    # widget.resize(800, 600)
-    # # widget.showFullScreen()
-    # widget.setWindowTitle("Digital Syzygies")
-    # widget.setStyleSheet("background-color:white;")
 
     if PLATFORM == "x86_64":
         widget.setCursor(Qt.BlankCursor)

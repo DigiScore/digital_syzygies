@@ -17,7 +17,7 @@ config.image_to_display = visual_folder[0]
 
 def update_vis():
     while running:
-        # randum dur for image to be on screen
+        # random dur for image to be on screen
         rnd_dur = random.randrange(config.min_dur_cello_notation,
                                    config.max_dur_cello_notation)
 
