@@ -4,7 +4,7 @@ import json
 import ssl
 import time
 import sys
-from pydispatch import Dispatcher
+# from pydispatch import Dispatcher
 import warnings
 import threading
 
@@ -57,7 +57,7 @@ HEADSET_CANNOT_WORK_WITH_BTLE = 112
 HEADSET_CANNOT_CONNECT_DISABLE_MOTION = 113
 
 
-class Cortex(Dispatcher):
+class Cortex:
     _events_ = ['inform_error', 'create_session_done', 'query_profile_done', 'load_unload_profile_done',
                 'save_profile_done', 'get_mc_active_action_done', 'mc_brainmap_done', 'mc_action_sensitivity_done',
                 'mc_training_threshold_done', 'create_record_done', 'stop_record_done', 'warn_cortex_stop_all_sub',
