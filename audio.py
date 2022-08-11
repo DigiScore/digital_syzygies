@@ -1,5 +1,6 @@
-from pydub import AudioSegment
-from pydub.playback import play
+# from pydub import AudioSegment
+# from pydub.playback import play
+from playsound import playsound
 import random
 import glob
 from time import sleep
@@ -115,10 +116,10 @@ class audio_player:
         rnd_audio = random.randrange(self.num_audio_files)
         sound_file = self.audio_folder[rnd_audio]
         print(f'sound file = {sound_file} from {self.performance_metric}')
-        sound = AudioSegment.from_wav(sound_file)
+        # sound = AudioSegment.from_wav(sound_file)
 
         # start a thread and play
-        audio_play_thread = Thread(target=play(sound))
+        audio_play_thread = Thread(target=playsound(sound_file))
         audio_play_thread.start()
 
         # flag pm in dict as ready to go

@@ -21,13 +21,14 @@ cd digital_syzygies
 
 Then install the required libraries using the following commands:
 ```
-pip install pydub
+pip install playsound
  
 pip install PyQt5
 
 pip install websocket-client
 
-pip install requests
+pip3 install PyObjC
+
 ```
 
 Step 3 - connect headset to EMOTIV Launcher
