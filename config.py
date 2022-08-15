@@ -7,15 +7,15 @@ density = 80
 max_audio_playing = 4
 
 # minimum duration for cello score onscreen (in seconds)
-min_dur_cello_notation = 12
+min_dur_cello_notation = 30
 
 # maximum duraton for cello score onscreen (in seconds)
-max_dur_cello_notation = 32
+max_dur_cello_notation = 31
 
 # duration of composition (in seconds)
 duration_of_composition = 360
 
-headset = False
+headset = True
 
 full_screen = False
 
@@ -32,6 +32,10 @@ _dict_of_playing = {"engagement": False,
                     "relaxation": False,
                     "stress": False
                     }
+
+_is_playing = False
+
+_current_pm_folder = ''
 
 ##### Emotiv access and app codes
 # client secret = yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j

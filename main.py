@@ -11,7 +11,7 @@
 ######################################
 
 # import python libraries
-from time import time
+from time import time, sleep
 import sys
 import platform
 
@@ -82,6 +82,10 @@ class MainWindow(QtWidgets.QWidget):
         # terminate all streams - audio may play out.
         self.eeg_bot.terminate()
         visuals.terminate()
+        while config._is_playing:
+            sleep(1)
+            print('waiting to quit')
+        print('quitting')
         quit()
 
 

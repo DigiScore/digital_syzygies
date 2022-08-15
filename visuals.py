@@ -2,24 +2,31 @@ import config
 import random
 from time import sleep
 import glob
-
 import threading
+from os import path
 
 # set up local vars
 running = True
-visual_folder = glob.glob('data/visuals/*.jpg')
-image_count = len(visual_folder)
-seed_rnd = random.randrange(image_count)
-random.seed(seed_rnd)
-random.shuffle(visual_folder)
-print(f"{image_count} images in visual folder")
-config.image_to_display = visual_folder[0]
+path_to_visuals = path.abspath(path.join(path.dirname(__file__),
+                                       'data/visuals'))
+
 
 def update_vis():
     while running:
         # random dur for image to be on screen
         rnd_dur = random.randrange(config.min_dur_cello_notation,
                                    config.max_dur_cello_notation)
+
+        # current folder params
+        current_dir = config._current_pm_folder
+        visual_folder_path = path.abspath(path.join(path_to_visuals, current_dir))
+        visual_folder = glob.glob(f'{visual_folder_path}/*.jpg')
+        image_count = len(visual_folder)
+        seed_rnd = random.randrange(image_count)
+        random.seed(seed_rnd)
+        random.shuffle(visual_folder)
+        print(f"{image_count} images in visual folder")
+        config.image_to_display = visual_folder[0]
 
         # random file from visual folder
         rnd_image = random.randrange(image_count)
@@ -29,6 +36,7 @@ def update_vis():
 
         # wait out the dur of image on screen
         sleep(rnd_dur)
+
 
 def terminate():
     global running

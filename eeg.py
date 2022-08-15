@@ -9,6 +9,7 @@ from random import randrange
 from time import sleep
 from queue import Queue
 
+
 class Eeg:
     def __init__(self):
         # init values

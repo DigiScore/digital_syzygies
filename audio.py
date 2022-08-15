@@ -4,9 +4,10 @@ from playsound import playsound
 import random
 import glob
 from time import sleep
-from threading import Thread
+# from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue, Empty
+from os import path
 
 import config
 
@@ -98,6 +99,7 @@ class AudioComposer:
 
     # once all checks are done bang a go for pm player
     def audio_player_bang(self, player_key):
+        config._current_pm_folder = player_key
         if player_key == "engagement":
             config._dict_of_playing["engagement"] = True
             # self.engagement.play()
@@ -131,30 +133,24 @@ class audio_player:
         self.running = True
         print(f'spawning audio bot for {performance_metric} player')
         self.performance_metric = performance_metric
-        self.audio_folder = glob.glob(f'data/audio/{self.performance_metric}/*.wav')
+
+        # create path for audio folder
+        path_to_audio_dir = path.abspath(path.join(path.dirname(__file__),
+                                             f'data/audio/'))
+        path_to_audio = path.abspath(path.join(path_to_audio_dir,
+                                               performance_metric))
+        self.audio_folder = glob.glob(f'{path_to_audio}/*.wav')
         self.num_audio_files = len(self.audio_folder)
         print(f'number of files in {performance_metric} folder = {self.num_audio_files}')
         seed_rnd = random.randrange(self.num_audio_files)
         random.seed(seed_rnd)
         random.shuffle(self.audio_folder)
 
-        # # start the loop
-        # self.main()
-
-    # def main(self):
-    #     while self.running:
-    #         if config._dict_of_playing[self.performance_metric] == True:
-    #             # start a thread and play
-    #             audio_play_thread = Thread(target=self.play)
-    #             audio_play_thread.start()
-    #
-    #         else:
-    #             sleep(0.1)
-
     def play(self):
         while self.running:
             if config._dict_of_playing[self.performance_metric] == True:
-                print(f'{self.performance_metric} == TRUE')
+                config._is_playing = True
+                # print(f'{self.performance_metric} == TRUE')
                 # choose random file from self.audio folder
                 rnd_audio = random.randrange(self.num_audio_files)
                 sound_file = self.audio_folder[rnd_audio]
@@ -168,7 +164,10 @@ class audio_player:
 
                 # flag pm in dict as ready to go
                 config._dict_of_playing[self.performance_metric] = False
-                print(f'{self.performance_metric} == FALSE')
+                config._is_playing = False
+
+                # print(f'{self.performance_metric} == FALSE')
+                print(f'audio is playing ==== {config._is_playing}')
 
             else:
                 sleep(0.1)
