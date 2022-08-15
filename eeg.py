@@ -7,6 +7,7 @@ import json
 import config
 from random import randrange
 from time import sleep
+from queue import Queue
 
 class Eeg:
     def __init__(self):
@@ -59,7 +60,11 @@ class Eeg:
 
         # starting audio composer
         print("starting audio composer")
-        self.audio = AudioComposer()
+        self.audio_queue = Queue()
+        self.audio = AudioComposer(self.audio_queue)
+
+        t_audio = Thread(target=self.audio.main)
+        t_audio.start()
 
         # start thread for EEG
         self.running = True
@@ -91,10 +96,12 @@ class Eeg:
 
                 # send the highest pm type position to audio player queue
                 # to make sound
-                self.audio.play_queue.append(highest_pm)
+                # self.audio.play_queue.append(highest_pm)
+                self.audio_queue.put(highest_pm)
             else:
                 rnd_pm = randrange(6)
-                self.audio.play_queue.append(rnd_pm)
+                # self.audio.play_queue.append(rnd_pm)
+                self.audio_queue.put(rnd_pm)
                 sleep(10)
 
     def calc_highest_pm(self, pm_dict):

@@ -5,13 +5,15 @@ import random
 import glob
 from time import sleep
 from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
+from queue import Queue, Empty
 
 import config
 
 """main object to control all 
 audio check and organisation"""
 class AudioComposer:
-    def __init__(self):
+    def __init__(self, audio_queue):
         # set the running var to go
         self.running = True
         self.list_of_keys = ["engagement",
@@ -29,27 +31,50 @@ class AudioComposer:
         self.relaxation = audio_player("relaxation")
         self.stress = audio_player("stress")
 
-        self.play_queue = []
+        # self.play_queue = []
+        self.audio_queue = audio_queue
 
         # start thread for EEG
-        self.running = True
-        t = Thread(target=self.play)
-        t.start()
+        # t = Thread(target=self.play)
+        # t.start()
+
+    def main(self):
+        tasks_to_thread = [
+            self.play,
+            self.engagement.play,
+            self.excitement.play,
+            self.focus.play,
+            self.interest.play,
+            self.relaxation.play,
+            self.stress.play
+            ]
+
+        with ThreadPoolExecutor(max_workers=7) as executor:
+            futures = [executor.submit(task) for task in tasks_to_thread]
 
     # receives a signal from main to check & start an audio file
     def play(self):
         while self.running:
-            # print('-------- updating audio')
+            print('-------- updating audio')
 
-            if len(self.play_queue) > 0:
-                print(f'play queue ======   {self.play_queue}')
+            # if len(self.play_queue) > 0:
+            try:
+                player_key = self.audio_queue.get()
+                print(f'player key = {player_key}')
+
+            except Empty:
+                sleep(1)
+
+            else:
+                # print(f'play queue ======   {self.play_queue}')
                 if self.check_num_of_players():
-                    player_key = self.play_queue.pop()
+                    # player_key = self.play_queue.pop()
                     player_key_name = self.list_of_keys[player_key]
                     if self.check_dict_of_players(player_key_name):
                         self.audio_player_bang(player_key_name)
-            else:
-                sleep(0.1)
+                        self.audio_queue.task_done()
+            # else:
+            #     sleep(1)
 
     # check to see if pm player is already playing
     def check_dict_of_players(self, player_key):
@@ -75,22 +100,23 @@ class AudioComposer:
     def audio_player_bang(self, player_key):
         if player_key == "engagement":
             config._dict_of_playing["engagement"] = True
-            self.engagement.play()
+            # self.engagement.play()
         elif player_key == "excitement":
             config._dict_of_playing["excitement"] = True
-            self.excitement.play()
+            # self.excitement.play()
         elif player_key == "focus":
             config._dict_of_playing["focus"] = True
-            self.focus.play()
+            # self.focus.play()
         elif player_key == "interest":
             config._dict_of_playing["interest"] = True
-            self.interest.play()
+            # self.interest.play()
         elif player_key == "relaxation":
             config._dict_of_playing["relaxation"] = True
-            self.relaxation.play()
+            # self.relaxation.play()
         elif player_key == "stress":
             config._dict_of_playing["stress"] = True
-            self.stress.play()
+            # self.stress.play()
+        print(f'playing a {player_key} sample')
 
     # crash the threads & processes
     def terminate(self):
@@ -102,6 +128,7 @@ objects for each pm audio player
 """
 class audio_player:
     def __init__(self, performance_metric):
+        self.running = True
         print(f'spawning audio bot for {performance_metric} player')
         self.performance_metric = performance_metric
         self.audio_folder = glob.glob(f'data/audio/{self.performance_metric}/*.wav')
@@ -111,19 +138,40 @@ class audio_player:
         random.seed(seed_rnd)
         random.shuffle(self.audio_folder)
 
+        # # start the loop
+        # self.main()
+
+    # def main(self):
+    #     while self.running:
+    #         if config._dict_of_playing[self.performance_metric] == True:
+    #             # start a thread and play
+    #             audio_play_thread = Thread(target=self.play)
+    #             audio_play_thread.start()
+    #
+    #         else:
+    #             sleep(0.1)
+
     def play(self):
-        # choose random file from self.audio folder
-        rnd_audio = random.randrange(self.num_audio_files)
-        sound_file = self.audio_folder[rnd_audio]
-        print(f'sound file = {sound_file} from {self.performance_metric}')
-        # sound = AudioSegment.from_wav(sound_file)
+        while self.running:
+            if config._dict_of_playing[self.performance_metric] == True:
+                print(f'{self.performance_metric} == TRUE')
+                # choose random file from self.audio folder
+                rnd_audio = random.randrange(self.num_audio_files)
+                sound_file = self.audio_folder[rnd_audio]
+                print(f'sound file = {sound_file} from {self.performance_metric}')
+                # sound = AudioSegment.from_wav(sound_file)
 
-        # start a thread and play
-        audio_play_thread = Thread(target=playsound(sound_file))
-        audio_play_thread.start()
+                # start a thread and play
+                # audio_play_thread = Thread(target=playsound(sound_file))
+                # audio_play_thread.start()
+                playsound(sound_file)
 
-        # flag pm in dict as ready to go
-        config._dict_of_playing[self.performance_metric] = False
+                # flag pm in dict as ready to go
+                config._dict_of_playing[self.performance_metric] = False
+                print(f'{self.performance_metric} == FALSE')
+
+            else:
+                sleep(0.1)
 
 if __name__ == "__main__":
     audiotest = AudioComposer()
