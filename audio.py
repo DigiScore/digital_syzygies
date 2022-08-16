@@ -139,7 +139,7 @@ class audio_player:
                                              '../../data/audio'))
         path_to_audio = path.abspath(path.join(path_to_audio_dir,
                                                performance_metric))
-        print(f'path to audio for {performance_metric} is {path_to_audio}')
+        # print(f'path to audio for {performance_metric} is {path_to_audio}')
 
         self.audio_folder = glob.glob(f'{path_to_audio}/*.wav')
         self.num_audio_files = len(self.audio_folder)
