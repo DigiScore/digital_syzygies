@@ -8,8 +8,9 @@ from os import path
 # set up local vars
 running = True
 path_to_visuals = path.abspath(path.join(path.dirname(__file__),
-                                       'data/visuals'))
+                                       '../../data/visuals'))
 
+config._current_pm_folder = 'engagement'
 
 def update_vis():
     while running:
