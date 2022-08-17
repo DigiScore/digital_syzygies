@@ -37,6 +37,8 @@ _is_playing = False
 
 _current_pm_folder = 'engagement'
 
+_request_access = False
+
 ##### Emotiv access and app codes
 # client secret = yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j
 # app name = digital_syzygies_no_EEG
