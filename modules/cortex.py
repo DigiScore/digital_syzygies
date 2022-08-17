@@ -411,7 +411,7 @@ class Cortex:
 
         self.ws.send(json.dumps(connect_headset_request, indent=4))
 
-    def request_access(self):
+    def request_access(self, ws):
         print('request access --------------------------------')
         request_access_request = {
             "jsonrpc": "2.0",
@@ -423,7 +423,7 @@ class Cortex:
             "id": REQUEST_ACCESS_ID
         }
 
-        self.ws.send(json.dumps(request_access_request, indent=4))
+        ws.send(json.dumps(request_access_request, indent=4))
 
     def has_access_right(self):
         print('check has access right --------------------------------')

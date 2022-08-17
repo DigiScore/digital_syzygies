@@ -33,6 +33,11 @@ class Eeg:
             print("Connecting to websocket...")
             self.ws = websocket.create_connection(url, sslopt=sslopt)
 
+            # request access
+            self.c.request_access(self.ws)
+            access = self.ws.recv()
+            print(access)
+
             # get authorisation
             self.c.authorize(self.ws)
             auth = self.ws.recv()
