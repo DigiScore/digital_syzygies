@@ -42,7 +42,6 @@ def update_vis():
         seed_rnd = random.randrange(image_count)
         random.seed(seed_rnd)
         random.shuffle(visual_folder)
-        print(f"{image_count} images in visual folder")
         config.image_to_display = visual_folder[0]
 
         # random file from visual folder
@@ -50,6 +49,8 @@ def update_vis():
 
         # add to the config file
         config.image_to_display = visual_folder[rnd_image]
+
+        print(f"taking image from {visual_folder}, file {config.image_to_display}")
 
         # wait out the dur of image on screen
         sleep(rnd_dur)
