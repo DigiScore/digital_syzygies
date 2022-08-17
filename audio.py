@@ -171,7 +171,8 @@ class audio_player:
                 # choose random file from self.audio folder
                 rnd_audio = random.randrange(self.num_audio_files)
                 sound_file = self.audio_folder[rnd_audio]
-                print(f'sound file = {sound_file} from {self.performance_metric}')
+                print(f'sound file = {sound_file} from {self.performance_metric}; '
+                      f'\nrandom number was = {rnd_audio} out of {self.num_audio_files}')
                 # sound = AudioSegment.from_wav(sound_file)
 
                 # start a thread and play
