@@ -86,7 +86,8 @@ class MainWindow(QtWidgets.QWidget):
             sleep(1)
             print('waiting to quit')
         print('quitting')
-        quit()
+        # Close UI
+        sys.exit(app.exec_())
 
 
 if __name__ == "__main__":

@@ -163,13 +163,16 @@ class audio_player:
         random.seed(seed_rnd)
         random.shuffle(self.audio_folder)
 
+    def random_generator(self):
+        return random.randrange(self.num_audio_files)
+
     def play(self):
         while self.running:
             if config._dict_of_playing[self.performance_metric] == True:
                 config._is_playing = True
                 # print(f'{self.performance_metric} == TRUE')
                 # choose random file from self.audio folder
-                rnd_audio = random.randrange(self.num_audio_files)
+                rnd_audio = self.random_generator()
                 sound_file = self.audio_folder[rnd_audio]
                 print(f'sound file = {sound_file} from {self.performance_metric}; '
                       f'\nrandom number was = {rnd_audio} out of {self.num_audio_files}')
