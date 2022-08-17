@@ -4,7 +4,7 @@ from playsound import playsound
 import random
 import glob
 from time import sleep
-# from threading import Thread
+from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue, Empty
 from os import path
@@ -43,18 +43,34 @@ class AudioComposer:
         # t.start()
 
     def main(self):
-        tasks_to_thread = [
-            self.play,
-            self.engagement.play,
-            self.excitement.play,
-            self.focus.play,
-            self.interest.play,
-            self.relaxation.play,
-            self.stress.play
-            ]
+        # tasks_to_thread = [
+        #     self.play,
+        #     self.engagement.play,
+        #     self.excitement.play,
+        #     self.focus.play,
+        #     self.interest.play,
+        #     self.relaxation.play,
+        #     self.stress.play
+        #     ]
+        #
+        # with ThreadPoolExecutor(max_workers=7) as executor:
+        #     futures = [executor.submit(task) for task in tasks_to_thread]
 
-        with ThreadPoolExecutor(max_workers=7) as executor:
-            futures = [executor.submit(task) for task in tasks_to_thread]
+        audio_thread1 = Thread(target=self.play)
+        audio_thread2 = Thread(target=self.engagement.play)
+        audio_thread3 = Thread(target=self.excitement.play)
+        audio_thread4 = Thread(target=self.focus.play)
+        audio_thread5 = Thread(target=self.interest.play)
+        audio_thread6 = Thread(target=self.relaxation.play)
+        audio_thread7 = Thread(target=self.stress.play)
+
+        audio_thread1.start()
+        audio_thread2.start()
+        audio_thread3.start()
+        audio_thread4.start()
+        audio_thread5.start()
+        audio_thread6.start()
+        audio_thread7.start()
 
     # receives a signal from main to check & start an audio file
     def play(self):
@@ -188,7 +204,7 @@ class audio_player:
                 config._is_playing = False
 
                 # print(f'{self.performance_metric} == FALSE')
-                print(f'audio is playing ==== {config._is_playing}')
+                # print(f'audio is playing ==== {config._is_playing}')
 
             else:
                 sleep(0.1)
