@@ -4,13 +4,24 @@ from time import sleep
 import glob
 import threading
 from os import path
+import sys
 
 # set up local vars
 running = True
-path_to_visuals = path.abspath(path.join(path.dirname(__file__),
-                                       '../../data/visuals'))
+# path_to_visuals = path.abspath(path.join(path.dirname(__file__),
+#                                        '../../data/visuals'))
 
-config._current_pm_folder = 'engagement'
+if getattr(sys, 'frozen', False):
+    # we are running in a bundle
+    path_to_visuals = path.abspath(path.join(path.dirname(__file__),
+                                             '../../data/visuals'))
+else:
+    # we are running in a normal Python environment
+    path_to_visuals = path.abspath(path.join(path.dirname(__file__),
+                                             'data/visuals'))
+
+print(f'Path to visuals is {path_to_visuals}')
+
 
 def update_vis():
     while running:

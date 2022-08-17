@@ -15,7 +15,7 @@ max_dur_cello_notation = 31
 # duration of composition (in seconds)
 duration_of_composition = 360
 
-headset = True
+headset = False
 
 full_screen = False
 
@@ -35,7 +35,7 @@ _dict_of_playing = {"engagement": False,
 
 _is_playing = False
 
-_current_pm_folder = ''
+_current_pm_folder = 'engagement'
 
 ##### Emotiv access and app codes
 # client secret = yqqqfzZ297TpeVc05E1Ch9XKkYvZbmgKfqDpGV2SZ5IsCFuR45VdG5K683uNVy2Y4v10oBPFAHC3NnkS3VKsBIrTLcpyykiXT8AIpDQ2coYl2uyyiLD3SutdrHKH703j

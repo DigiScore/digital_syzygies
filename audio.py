@@ -8,6 +8,7 @@ from time import sleep
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue, Empty
 from os import path
+import sys
 
 import config
 
@@ -135,8 +136,18 @@ class audio_player:
         self.performance_metric = performance_metric
 
         # create path for audio folder
-        path_to_audio_dir = path.abspath(path.join(path.dirname(__file__),
-                                             '../../data/audio'))
+        if getattr(sys, 'frozen', False):
+            # we are running in a bundle
+            path_to_audio_dir = path.abspath(path.join(path.dirname(__file__),
+                                                       '../../data/audio'))
+        else:
+            # we are running in a normal Python environment
+            path_to_audio_dir = path.abspath(path.join(path.dirname(__file__),
+                                                       'data/audio'))
+
+
+        # path_to_audio_dir = path.abspath(path.join(path.dirname(__file__),
+        #                                      '../../data/audio'))
         path_to_audio = path.abspath(path.join(path_to_audio_dir,
                                                performance_metric))
         print(f'path to audio for {performance_metric} is {path_to_audio}')
