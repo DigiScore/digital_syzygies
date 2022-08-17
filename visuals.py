@@ -24,6 +24,11 @@ print(f'Path to visuals is {path_to_visuals}')
 
 
 def update_vis():
+    """Thread that chooses a new image per cycle.
+    Min and Max durations are defined in the config file.
+    File choice is governed by current pm folder in audio selection.
+    """
+
     while running:
         # random dur for image to be on screen
         rnd_dur = random.randrange(config.min_dur_cello_notation,
@@ -51,6 +56,7 @@ def update_vis():
 
 
 def terminate():
+    """shuts down the thread"""
     global running
     running = False
 

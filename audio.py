@@ -12,9 +12,11 @@ import sys
 
 import config
 
-"""main object to control all 
-audio check and organisation"""
+
 class AudioComposer:
+    """main object to control all
+    audio check and organisation"""
+
     def __init__(self, audio_queue):
         # set the running var to go
         self.running = True
@@ -125,11 +127,13 @@ class AudioComposer:
     def terminate(self):
         self.running = False
 
-"""Audio Player. 
-avoid LOC by instantiating individual 
-objects for each pm audio player
-"""
+
 class audio_player:
+    """Audio Player.
+    avoid LOC by instantiating individual
+    objects for each pm audio player
+    """
+
     def __init__(self, performance_metric):
         self.running = True
         print(f'spawning audio bot for {performance_metric} player')
