@@ -33,17 +33,26 @@ class Eeg:
             print("Connecting to websocket...")
             self.ws = websocket.create_connection(url, sslopt=sslopt)
 
-            if config._request_access:
+            # try to authorise
+            print("Getting authorisation")
+            try:
+                self.c.authorize(self.ws)
+                auth = self.ws.recv()
+                print(auth)
+                token = json.loads(auth)["result"]["cortexToken"]
+
+            # error likely to be access
+            except:
+                print("Requesting Access First")
                 # request access
                 self.c.request_access(self.ws)
                 access = self.ws.recv()
                 print(access)
-
-            # get authorisation
-            self.c.authorize(self.ws)
-            auth = self.ws.recv()
-            print(auth)
-            token = json.loads(auth)["result"]["cortexToken"]
+                # then get authorisation
+                print("Getting authorisation again")
+                self.c.authorize(self.ws)
+                auth = self.ws.recv()
+                print(auth)
 
             print("Checking headset connectivity...")
             # connect

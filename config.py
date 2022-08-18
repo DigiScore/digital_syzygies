@@ -40,7 +40,7 @@ _is_playing = False
 
 _current_pm_folder = 'engagement'
 
-_request_access = False
+# _request_access = False
 
 
 ##### Emotiv access and app codes
