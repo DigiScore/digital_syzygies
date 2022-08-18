@@ -39,8 +39,8 @@ def update_vis():
         visual_folder_path = path.abspath(path.join(path_to_visuals, current_dir))
         visual_folder = glob.glob(f'{visual_folder_path}/*.jpg')
         image_count = len(visual_folder)
-        seed_rnd = random.randrange(image_count)
-        random.seed(seed_rnd)
+        # seed_rnd = random.randrange(image_count)
+        # random.seed(seed_rnd)
         random.shuffle(visual_folder)
         config.image_to_display = visual_folder[0]
 

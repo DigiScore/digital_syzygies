@@ -175,8 +175,8 @@ class audio_player:
         self.audio_folder = glob.glob(f'{path_to_audio}/*.wav')
         self.num_audio_files = len(self.audio_folder)
         print(f'number of files in {performance_metric} folder = {self.num_audio_files}')
-        seed_rnd = random.randrange(self.num_audio_files)
-        random.seed(seed_rnd)
+        # seed_rnd = random.randrange(self.num_audio_files)
+        # random.seed(seed_rnd)
         random.shuffle(self.audio_folder)
 
     def random_generator(self):
@@ -188,10 +188,12 @@ class audio_player:
                 config._is_playing = True
                 # print(f'{self.performance_metric} == TRUE')
                 # choose random file from self.audio folder
+                rnd_rnd = random.random()
                 rnd_audio = self.random_generator()
                 sound_file = self.audio_folder[rnd_audio]
                 print(f'sound file = {sound_file} from {self.performance_metric}; '
-                      f'\nrandom number was = {rnd_audio} out of {self.num_audio_files}')
+                      f'\nrandom number was = {rnd_audio} out of {self.num_audio_files}   '
+                      f'#######      rnd id={rnd_rnd}')
                 # sound = AudioSegment.from_wav(sound_file)
 
                 # start a thread and play

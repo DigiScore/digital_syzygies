@@ -1,3 +1,5 @@
+import random
+
 from modules.cortex import Cortex
 from audio import AudioComposer
 from threading import Thread
@@ -5,7 +7,7 @@ import ssl
 import websocket  # 'pip install websocket-client' for install
 import json
 import config
-from random import randrange
+import random
 from time import sleep
 from queue import Queue
 
@@ -106,7 +108,10 @@ class Eeg:
                 # self.audio.play_queue.append(highest_pm)
                 self.audio_queue.put(highest_pm)
             else:
-                rnd_pm = randrange(6)
+                rnd_pm = random.randrange(6)
+                rnd_rnd = random.random()
+                print(f'random PM is {rnd_pm},     '
+                      f'#######         rnd id = {rnd_rnd}')
                 # self.audio.play_queue.append(rnd_pm)
                 self.audio_queue.put(rnd_pm)
                 sleep(10)
