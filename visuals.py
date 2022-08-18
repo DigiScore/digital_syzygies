@@ -52,11 +52,11 @@ def update_vis():
         visual_folder_path = path.abspath(path.join(path_to_visuals, current_dir))
         visual_folder = glob.glob(f'{visual_folder_path}/*.jpg')
         image_count = len(visual_folder)
-        rnd_file = random.randrange(image_count)
+        # rnd_file = random.randrange(image_count)
         # seed_rnd = random.randrange(image_count)
         # random.seed(seed_rnd)
         # random.shuffle(visual_folder)
-        config.image_to_display = visual_folder[rnd_file]
+        # config.image_to_display = visual_folder[rnd_file]
 
         # random file from visual folder
         rnd_image = random.randrange(image_count)
@@ -64,7 +64,7 @@ def update_vis():
         # add to the config file
         config.image_to_display = visual_folder[rnd_image]
 
-        print(f"taking image from {visual_folder}, file {config.image_to_display}")
+        print(f"taking image from {visual_folder}, file: {config.image_to_display}")
 
         # wait out the dur of image on screen
         sleep(rnd_dur)
