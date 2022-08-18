@@ -20,7 +20,18 @@ else:
     path_to_visuals = path.abspath(path.join(path.dirname(__file__),
                                              'data/visuals'))
 
+# print out the contents of each pm folder in the visuals dir
 print(f'Path to visuals is {path_to_visuals}')
+list_of_keys = ["engagement",
+                 "excitement",
+                 "focus",
+                 "interest",
+                 "relaxation",
+                 "stress"]
+
+for pm in list_of_keys:
+    path_to_pm_vis = path.abspath(path.join(path.dirname(__file__), pm))
+    print(f'number of images in {pm} visual folder is{len(path_to_pm_vis)}')
 
 
 def update_vis():
