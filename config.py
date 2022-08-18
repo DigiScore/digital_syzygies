@@ -15,7 +15,7 @@ max_dur_cello_notation = 31
 # duration of composition (in seconds)
 duration_of_composition = 360
 
-headset = False
+headset = True
 
 full_screen = False
 
