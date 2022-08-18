@@ -32,7 +32,8 @@ list_of_keys = ["engagement",
 for pm in list_of_keys:
     path_to_pm_vis = path.abspath(path.join(path_to_visuals, pm))
     pm_folder_count = glob.glob(f'{path_to_pm_vis}/*')
-    print(f'number of images in {path_to_pm_vis} is {len(pm_folder_count)}')
+    if config.visual_reporting:
+        print(f'number of images in {path_to_pm_vis} is {len(pm_folder_count)}')
 
     # randomly shuffle files
     random.shuffle(pm_folder_count)
@@ -57,15 +58,16 @@ def update_vis():
         # random file from visual folder
         image_count = len(visual_folder)
         rnd_image = random.randrange(image_count)
-        print(f'trying to take {rnd_image} from image count {image_count} in {visual_folder_path}')
+        if config.visual_reporting:
+            print(f'trying to take {rnd_image} from image count {image_count} in {visual_folder_path}')
 
         # add to the config file
         config.image_to_display = visual_folder[rnd_image]
-        print(f"taking image from {visual_folder}, file: {config.image_to_display}")
+        if config.visual_reporting:
+            print(f"taking image from {visual_folder}, file: {config.image_to_display}")
 
         # wait out the dur of image on screen
         sleep(rnd_dur)
-
 
 def terminate():
     """shuts down the thread"""
@@ -75,5 +77,3 @@ def terminate():
 def main():
     vis_thread = threading.Timer(1, update_vis)
     vis_thread.start()
-
-

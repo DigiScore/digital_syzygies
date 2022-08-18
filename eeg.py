@@ -113,7 +113,7 @@ class Eeg:
                 print(f'random PM is {rnd_pm},     '
                       f'#######         rnd id = {rnd_rnd}')
                 self.audio_queue.put(rnd_pm)
-                sleep(10)
+                sleep(0.5)
 
     def calc_highest_pm(self, pm_dict):
         # calc highest value position of pm
