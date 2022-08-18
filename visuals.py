@@ -33,6 +33,7 @@ for pm in list_of_keys:
     path_to_pm_vis = path.abspath(path.join(path_to_visuals, pm))
     pm_folder_count = glob.glob(f'{path_to_pm_vis}/*')
     print(f'number of images in {path_to_pm_vis} is {len(pm_folder_count)}')
+    random.shuffle(pm_folder_count)
 
 
 def update_vis():
@@ -51,10 +52,11 @@ def update_vis():
         visual_folder_path = path.abspath(path.join(path_to_visuals, current_dir))
         visual_folder = glob.glob(f'{visual_folder_path}/*.jpg')
         image_count = len(visual_folder)
+        rnd_file = random.randrange(image_count)
         # seed_rnd = random.randrange(image_count)
         # random.seed(seed_rnd)
-        random.shuffle(visual_folder)
-        config.image_to_display = visual_folder[0]
+        # random.shuffle(visual_folder)
+        config.image_to_display = visual_folder[rnd_file]
 
         # random file from visual folder
         rnd_image = random.randrange(image_count)
