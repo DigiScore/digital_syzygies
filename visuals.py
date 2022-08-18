@@ -30,8 +30,9 @@ list_of_keys = ["engagement",
                  "stress"]
 
 for pm in list_of_keys:
-    path_to_pm_vis = path.abspath(path.join(path.dirname(__file__), pm))
-    print(f'number of images in {pm} visual folder is{len(path_to_pm_vis)}')
+    path_to_pm_vis = path.abspath(path.join(path_to_visuals, pm))
+    pm_folder_count = glob.glob(f'{path_to_pm_vis}/*')
+    print(f'number of images in {path_to_pm_vis} is {len(pm_folder_count)}')
 
 
 def update_vis():
