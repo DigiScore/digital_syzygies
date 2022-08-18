@@ -8,9 +8,8 @@ import sys
 
 # set up local vars
 running = True
-# path_to_visuals = path.abspath(path.join(path.dirname(__file__),
-#                                        '../../data/visuals'))
 
+# get path depending on bundle or python run
 if getattr(sys, 'frozen', False):
     # we are running in a bundle
     path_to_visuals = path.abspath(path.join(path.dirname(__file__),
@@ -23,16 +22,19 @@ else:
 # print out the contents of each pm folder in the visuals dir
 print(f'Path to visuals is {path_to_visuals}')
 list_of_keys = ["engagement",
-                 "excitement",
-                 "focus",
-                 "interest",
-                 "relaxation",
-                 "stress"]
+                "excitement",
+                "focus",
+                "interest",
+                "relaxation",
+                "stress"
+                ]
 
 for pm in list_of_keys:
     path_to_pm_vis = path.abspath(path.join(path_to_visuals, pm))
     pm_folder_count = glob.glob(f'{path_to_pm_vis}/*')
     print(f'number of images in {path_to_pm_vis} is {len(pm_folder_count)}')
+
+    # randomly shuffle files
     random.shuffle(pm_folder_count)
 
 
@@ -51,19 +53,14 @@ def update_vis():
         current_dir = config._current_pm_folder
         visual_folder_path = path.abspath(path.join(path_to_visuals, current_dir))
         visual_folder = glob.glob(f'{visual_folder_path}/*.jpg')
-        image_count = len(visual_folder)
-        # rnd_file = random.randrange(image_count)
-        # seed_rnd = random.randrange(image_count)
-        # random.seed(seed_rnd)
-        # random.shuffle(visual_folder)
-        # config.image_to_display = visual_folder[rnd_file]
 
         # random file from visual folder
+        image_count = len(visual_folder)
         rnd_image = random.randrange(image_count)
+        print(f'trying to take {rnd_image} from image count {image_count} in {visual_folder_path}')
 
         # add to the config file
         config.image_to_display = visual_folder[rnd_image]
-
         print(f"taking image from {visual_folder}, file: {config.image_to_display}")
 
         # wait out the dur of image on screen

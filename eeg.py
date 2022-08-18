@@ -1,5 +1,3 @@
-import random
-
 from modules.cortex import Cortex
 from audio import AudioComposer
 from threading import Thread
@@ -88,9 +86,11 @@ class Eeg:
         while self.running:
             print(f'\t\t\t\taudio players = {config._dict_of_playing}')
             if config.headset:
+                # calculate the huighest value of pm from eeg headsaet
                 print('-------- updating eeg')
                 eeg_pm_list = []
 
+                # grab json from headset
                 data = json.loads(self.ws.recv())
                 data = data['met']
                 print('pm data: {}'.format(data))
@@ -105,14 +105,13 @@ class Eeg:
 
                 # send the highest pm type position to audio player queue
                 # to make sound
-                # self.audio.play_queue.append(highest_pm)
                 self.audio_queue.put(highest_pm)
             else:
+                # generate a random instance
                 rnd_pm = random.randrange(6)
                 rnd_rnd = random.random()
                 print(f'random PM is {rnd_pm},     '
                       f'#######         rnd id = {rnd_rnd}')
-                # self.audio.play_queue.append(rnd_pm)
                 self.audio_queue.put(rnd_pm)
                 sleep(10)
 
