@@ -42,7 +42,7 @@ class Eeg:
                 token = json.loads(auth)["result"]["cortexToken"]
 
             # error likely to be access
-            except:
+            except KeyError:
                 print("Requesting Access First")
                 # request access
                 self.c.request_access(self.ws)
@@ -53,6 +53,7 @@ class Eeg:
                 self.c.authorize(self.ws)
                 auth = self.ws.recv()
                 print(auth)
+                token = json.loads(auth)["result"]["cortexToken"]
 
             print("Checking headset connectivity...")
             # connect
