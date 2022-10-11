@@ -1,6 +1,16 @@
 # digital_syzygies
-Network, EEG composition by Andrew Hugill and team
+Network, EEG composition by Andrew Hugill and team.
+Software developed by Craig Vear (2022)
 
+# Installation A - the Digital Syzygies app
+Step 1 - Download the Zip file using the drop down menu in the green "Code" button above
+
+Step 2 - Open the Zip folder and navigate to folder digital_syzygies-main/dist/main
+
+Step 3 - Double click on file "main" [Mac users may need to unblock app in 'Security & Privacy' in System Preferences] 
+
+
+# Installation B - Python Library
 Step 1 - created Python virtual environment (venv)
 
 Digital Syzygies requires a minimum [Python version of 3.7](https://www.python.org/downloads/). 
